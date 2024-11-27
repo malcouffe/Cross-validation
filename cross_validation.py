@@ -26,12 +26,16 @@ def make_fold(X, y, k):
     return folds
 
 def cross_validation(X, y, k, model, metric):
-    scores=[]
+    scores = []
     folds = make_fold(X, y, k)
+    
     for i, fold in enumerate(folds):
         X_train, X_test, y_train, y_test = fold
         model.fit(X_train, y_train)
         y_pred = model.predict(X_test)
         score = metric(y_test, y_pred)
-        scores.append({f"Fold_{i}" : score})
-    return scores
+        scores.append({f"Fold_{i}": score})
+    
+    mean_score = np.mean([fold_score[f"Fold_{i}"] for i, fold_score in enumerate(scores)])
+    
+    return scores, mean_score
